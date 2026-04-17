@@ -47,7 +47,7 @@ def _expectation_gaussian_linear(
 
     :return: NxQ
     """
-    return mean(p.mu)
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Constant, NoneType, mfn.Constant, NoneType)
@@ -65,7 +65,7 @@ def _expectation_gaussian_constant__constant(
 
     :return: NxQ1xQ2
     """
-    return mean1(p.mu)[:, :, None] * mean2(p.mu)[:, None, :]
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Constant, NoneType, mfn.MeanFunction, NoneType)
@@ -84,8 +84,7 @@ def _expectation_gaussian_constant__meanfunction(
 
     :return: NxQ1xQ2
     """
-    e_mean2 = expectation(p, mean2)
-    return mean1(p.mu)[:, :, None] * e_mean2[:, None, :]
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.MeanFunction, NoneType, mfn.Constant, NoneType)
@@ -109,8 +108,7 @@ def _expectation_gaussian_meanfunction__constant(
 
     :return: NxQ1xQ2
     """
-    e_mean1 = expectation(p, mean1)
-    return e_mean1[:, :, None] * mean2(p.mu)[:, None, :]
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Identity, NoneType, mfn.Identity, NoneType)
@@ -128,7 +126,7 @@ def _expectation_gaussian_identity__identity(
 
     :return: NxDxD
     """
-    return p.cov + (p.mu[:, :, None] * p.mu[:, None, :])
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Identity, NoneType, mfn.Linear, NoneType)
@@ -147,12 +145,7 @@ def _expectation_gaussian_identity__linear(
 
     :return: NxDxQ
     """
-    N = tf.shape(p.mu)[0]
-    e_xxt = p.cov + (p.mu[:, :, None] * p.mu[:, None, :])  # NxDxD
-    e_xxt_A = tf.linalg.matmul(e_xxt, tf.tile(mean2.A[None, ...], (N, 1, 1)))  # NxDxQ
-    e_x_bt = p.mu[:, :, None] * mean2.b[None, None, :]  # NxDxQ
-
-    return e_xxt_A + e_x_bt
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Linear, NoneType, mfn.Identity, NoneType)
@@ -171,14 +164,7 @@ def _expectation_gaussian_linear__identity(
 
     :return: NxQxD
     """
-    N = tf.shape(p.mu)[0]
-    e_xxt = p.cov + (p.mu[:, :, None] * p.mu[:, None, :])  # NxDxD
-    e_A_xxt = tf.linalg.matmul(
-        tf.tile(mean1.A[None, ...], (N, 1, 1)), e_xxt, transpose_a=True
-    )  # NxQxD
-    e_b_xt = mean1.b[None, :, None] * p.mu[:, None, :]  # NxQxD
-
-    return e_A_xxt + e_b_xt
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Linear, NoneType, mfn.Linear, NoneType)
@@ -196,10 +182,4 @@ def _expectation_gaussian_linear__linear(
 
     :return: NxQ1xQ2
     """
-    e_xxt = p.cov + (p.mu[:, :, None] * p.mu[:, None, :])  # NxDxD
-    e_A1t_xxt_A2 = tf.einsum("iq,nij,jz->nqz", mean1.A, e_xxt, mean2.A)  # NxQ1xQ2
-    e_A1t_x_b2t = tf.einsum("iq,ni,z->nqz", mean1.A, p.mu, mean2.b)  # NxQ1xQ2
-    e_b1_xt_A2 = tf.einsum("q,ni,iz->nqz", mean1.b, p.mu, mean2.A)  # NxQ1xQ2
-    e_b1_b2t = mean1.b[:, None] * mean2.b[None, :]  # Q1xQ2
-
-    return e_A1t_xxt_A2 + e_A1t_x_b2t + e_b1_xt_A2 + e_b1_b2t
+    pass

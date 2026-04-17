@@ -98,16 +98,12 @@ class MonitorTaskGroup:
 
     @property
     def tasks(self) -> Collection[MonitorTask]:
-        return self._tasks
+        pass
 
     @tasks.setter
     def tasks(self, task_or_tasks: Union[Collection[MonitorTask], MonitorTask]) -> None:
         """Ensures the tasks are stored as a list. Even if there is only a single task."""
-        if isinstance(task_or_tasks, MonitorTask):
-            self._tasks = [task_or_tasks]
-        else:
-            assert isinstance(task_or_tasks, Collection)
-            self._tasks = list(task_or_tasks)
+        pass
 
     def __call__(self, step: int, **kwargs: Any) -> None:
         """Call each task in the group."""

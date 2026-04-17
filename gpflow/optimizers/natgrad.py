@@ -367,9 +367,7 @@ class NaturalGradient(tf_keras.optimizers.Optimizer):
         q_sqrt.assign(varsqrt_new)
 
     def get_config(self) -> Dict[str, Any]:
-        config: Dict[str, Any] = super().get_config()
-        config.update({"gamma": self._serialize_hyperparameter("gamma")})
-        return config
+        pass
 
 
 #
@@ -395,28 +393,7 @@ def swap_dimensions(
         * inputs: [N, D], [D, N, N]
         * outputs: [N, D], [D, N, N]
     """
-
-    @functools.wraps(method)
-    @check_shapes(
-        "a_nd: [N, D] if swap",
-        "a_nd: [D, N, 1] if not swap",
-        "b_dnn: [D, N, N]",
-        "return[0]: [N, D] if swap",
-        "return[0]: [D, N, 1] if not swap",
-        "return[1]: [D, N, N]",
-    )
-    def wrapper(
-        a_nd: tf.Tensor, b_dnn: tf.Tensor, swap: bool = True
-    ) -> Tuple[tf.Tensor, tf.Tensor]:
-        if swap:
-            a_dn1 = tf.linalg.adjoint(a_nd)[:, :, None]
-            A_dn1, B_dnn = method(a_dn1, b_dnn)
-            A_nd = tf.linalg.adjoint(A_dn1[:, :, 0])
-            return A_nd, B_dnn
-        else:
-            return method(a_nd, b_dnn)
-
-    return wrapper
+    pass
 
 
 @swap_dimensions
@@ -469,8 +446,7 @@ def natural_to_expectation(nat1: tf.Tensor, nat2: tf.Tensor) -> Tuple[tf.Tensor,
     "return[1]: [D, N, N]",
 )
 def expectation_to_natural(eta1: tf.Tensor, eta2: tf.Tensor) -> Tuple[tf.Tensor, tf.Tensor]:
-    args = expectation_to_meanvarsqrt(eta1, eta2, swap=False)
-    return meanvarsqrt_to_natural(*args, swap=False)
+    pass
 
 
 @swap_dimensions

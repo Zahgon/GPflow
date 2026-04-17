@@ -133,12 +133,12 @@ class SharedIndependent(MultioutputKernel):
     @property
     def num_latent_gps(self) -> int:
         # In this case number of latent GPs (L) == output_dim (P)
-        return self.output_dim
+        pass
 
     @property
     def latent_kernels(self) -> Tuple[Kernel, ...]:
         """The underlying kernels in the multioutput kernel"""
-        return (self.kernel,)
+        pass
 
     @inherit_check_shapes
     def K(
@@ -208,12 +208,12 @@ class SeparateIndependent(MultioutputKernel, Combination):
 
     @property
     def num_latent_gps(self) -> int:
-        return len(self.kernels)
+        pass
 
     @property
     def latent_kernels(self) -> Tuple[Kernel, ...]:
         """The underlying kernels in the multioutput kernel"""
-        return tuple(self.kernels)
+        pass
 
     @inherit_check_shapes
     def K(
@@ -309,12 +309,12 @@ class LinearCoregionalization(IndependentLatent, Combination):
 
     @property
     def num_latent_gps(self) -> int:
-        return self.W.shape[-1]  # type: ignore[no-any-return]  # L
+        pass
 
     @property
     def latent_kernels(self) -> Tuple[Kernel, ...]:
         """The underlying kernels in the multioutput kernel"""
-        return tuple(self.kernels)
+        pass
 
     @inherit_check_shapes
     def Kgg(self, X: TensorType, X2: TensorType) -> tf.Tensor:

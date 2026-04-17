@@ -37,8 +37,7 @@ def gaussian(x: TensorType, mu: TensorType, var: TensorType) -> tf.Tensor:
     "return: [shape...]",
 )
 def lognormal(x: TensorType, mu: TensorType, var: TensorType) -> tf.Tensor:
-    lnx = tf.math.log(x)
-    return gaussian(lnx, mu, var) - lnx
+    pass
 
 
 @check_shapes(
@@ -127,7 +126,7 @@ def beta(x: TensorType, alpha: TensorType, beta: TensorType) -> tf.Tensor:
     "return: [shape...]",
 )
 def laplace(x: TensorType, mu: TensorType, sigma: TensorType) -> tf.Tensor:
-    return -tf.abs(mu - x) / sigma - tf.math.log(2.0 * sigma)
+    pass
 
 
 @check_shapes(

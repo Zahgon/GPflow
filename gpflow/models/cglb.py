@@ -76,7 +76,7 @@ class CGLB(SGPR):
         "return: [N, P]",
     )
     def aux_vec(self) -> Parameter:
-        return self._v
+        pass
 
     @inherit_check_shapes
     def logdet_term(self, common: SGPR.CommonTensors) -> tf.Tensor:
@@ -264,12 +264,7 @@ class CGLB(SGPR):
         Compute the mean and variance of the held-out data at the
         input points.
         """
-        assert_params_false(self.predict_y, full_cov=full_cov, full_output_cov=full_output_cov)
-
-        f_mean, f_var = self.predict_f(
-            Xnew, full_cov=full_cov, full_output_cov=full_output_cov, cg_tolerance=cg_tolerance
-        )
-        return self.likelihood.predict_mean_and_var(Xnew, f_mean, f_var)
+        pass
 
     @inherit_check_shapes
     def predict_log_density(
@@ -282,15 +277,7 @@ class CGLB(SGPR):
         """
         Compute the log density of the data at the new data points.
         """
-        assert_params_false(
-            self.predict_log_density, full_cov=full_cov, full_output_cov=full_output_cov
-        )
-
-        x, y = data
-        f_mean, f_var = self.predict_f(
-            x, full_cov=full_cov, full_output_cov=full_output_cov, cg_tolerance=cg_tolerance
-        )
-        return self.likelihood.predict_log_density(x, f_mean, f_var, y)
+        pass
 
 
 class NystromPreconditioner:
@@ -390,26 +377,10 @@ def cglb_conjugate_gradient(
         rz: tf.Tensor
 
     def stopping_criterion(state: CGState) -> tf.Tensor:
-        return (0.5 * state.rz > cg_tolerance) and (state.i < max_steps)
+        pass
 
     def cg_step(state: CGState) -> List[CGState]:
-        Ap = state.p @ K
-        denom = tf.reduce_sum(state.p * Ap, axis=-1)
-        gamma = state.rz / denom
-        v = state.v + gamma * state.p
-        i = state.i + 1
-        r = tf.cond(
-            state.i % restart_cg_step == restart_cg_step - 1,
-            lambda: b - v @ K,
-            lambda: state.r - gamma * Ap,
-        )
-        z, new_rz = preconditioner(r)
-        p = tf.cond(
-            state.i % restart_cg_step == restart_cg_step - 1,
-            lambda: z,
-            lambda: z + state.p * new_rz / state.rz,
-        )
-        return [CGState(i, v, r, p, new_rz)]
+        pass
 
     Kv = initial @ K
     r = b - Kv

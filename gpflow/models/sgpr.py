@@ -103,48 +103,7 @@ class SGPRBase_deprecated(GPModel, InternalDataTrainingLossMixin):
 
         which computes each individual element of the trace term.
         """
-        X_data, Y_data = self.data
-
-        sigma_sq = tf.squeeze(self.likelihood.variance_at(X_data), axis=-1)  # [N]
-        sigma = tf.sqrt(sigma_sq)  # [N]
-
-        Kdiag = self.kernel(X_data, full_cov=False)
-        kuu = Kuu(self.inducing_variable, self.kernel, jitter=default_jitter())
-        kuf = Kuf(self.inducing_variable, self.kernel, X_data)
-
-        I = tf.eye(tf.shape(kuu)[0], dtype=default_float())
-
-        L = tf.linalg.cholesky(kuu)
-        A = tf.linalg.triangular_solve(L, kuf, lower=True)
-
-        A_sigma = tf.linalg.triangular_solve(L, kuf / sigma, lower=True)
-        AAT_sigma = tf.linalg.matmul(A_sigma, A_sigma, transpose_b=True)
-        B = I + AAT_sigma
-        LB = tf.linalg.cholesky(B)
-
-        # Using the Trace bound, from Titsias' presentation
-        c = tf.reduce_sum(Kdiag) - tf.reduce_sum(tf.square(A))
-
-        # Alternative bound on max eigenval:
-        cn_var = sigma_sq + c
-        cn_std = tf.sqrt(cn_var)
-
-        const = -0.5 * tf.reduce_sum(tf.math.log(2 * np.pi * sigma_sq))
-        logdet = -tf.reduce_sum(tf.math.log(tf.linalg.diag_part(LB)))
-
-        A_cn = tf.linalg.triangular_solve(L, kuf / cn_std, lower=True)
-        AAT_cn = tf.linalg.matmul(A_cn, A_cn, transpose_b=True)
-
-        err = Y_data - self.mean_function(X_data)
-        LC = tf.linalg.cholesky(I + AAT_cn)
-        v = tf.linalg.triangular_solve(
-            LC, tf.linalg.matmul(A_cn, err / cn_std[:, None]), lower=True
-        )
-        quad = -0.5 * tf.reduce_sum(tf.square(err / cn_std[:, None])) + 0.5 * tf.reduce_sum(
-            tf.square(v)
-        )
-
-        return const + logdet + quad
+        pass
 
 
 class SGPR_deprecated(SGPRBase_deprecated):
@@ -352,29 +311,7 @@ class SGPR_deprecated(SGPRBase_deprecated):
 
         :return: mu, cov
         """
-        X_data, Y_data = self.data
-
-        kuf = Kuf(self.inducing_variable, self.kernel, X_data)
-        kuu = Kuu(self.inducing_variable, self.kernel, jitter=default_jitter())
-
-        var = tf.squeeze(self.likelihood.variance_at(X_data), axis=-1)
-        std = tf.sqrt(var)
-        scaled_kuf = kuf / std
-        sig = kuu + tf.matmul(scaled_kuf, scaled_kuf, transpose_b=True)
-        sig_sqrt = tf.linalg.cholesky(sig)
-
-        sig_sqrt_kuu = tf.linalg.triangular_solve(sig_sqrt, kuu)
-
-        cov = tf.linalg.matmul(sig_sqrt_kuu, sig_sqrt_kuu, transpose_a=True)
-        err = Y_data - self.mean_function(X_data)
-        scaled_err = err / std[..., None]
-        mu = tf.linalg.matmul(
-            sig_sqrt_kuu,
-            tf.linalg.triangular_solve(sig_sqrt, tf.linalg.matmul(scaled_kuf, scaled_err)),
-            transpose_a=True,
-        )
-
-        return mu, cov
+        pass
 
 
 class GPRFITC(SGPRBase_deprecated):

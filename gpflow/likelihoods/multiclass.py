@@ -44,12 +44,11 @@ class Softmax(MonteCarloLikelihood):
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return tf.nn.softmax(F)
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        p = self.conditional_mean(X, F)
-        return p - p ** 2
+        pass
 
 
 class RobustMax(Module):
@@ -104,7 +103,7 @@ class RobustMax(Module):
         "return: []",
     )
     def eps_k1(self) -> tf.Tensor:
-        return self.epsilon / (self.num_classes - 1.0)
+        pass
 
     @check_shapes(
         "val: [batch...]",
@@ -201,21 +200,13 @@ class MultiClass(Likelihood):
     def _predict_mean_and_var(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType
     ) -> MeanAndVariance:
-        possible_outputs = [
-            tf.fill(tf.stack([tf.shape(Fmu)[0], 1]), np.array(i, dtype=np.int64))
-            for i in range(self.num_classes)
-        ]
-        ps = [self._predict_non_logged_density(X, Fmu, Fvar, po) for po in possible_outputs]
-        ps = tf.transpose(tf.stack([tf.reshape(p, (-1,)) for p in ps]))
-        return ps, ps - tf.square(ps)
+        pass
 
     @inherit_check_shapes
     def _predict_log_density(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType, Y: TensorType
     ) -> tf.Tensor:
-        return tf.reduce_sum(
-            tf.math.log(self._predict_non_logged_density(X, Fmu, Fvar, Y)), axis=-1
-        )
+        pass
 
     @check_shapes(
         "X: [broadcast batch..., input_dim]",
@@ -227,16 +218,12 @@ class MultiClass(Likelihood):
     def _predict_non_logged_density(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType, Y: TensorType
     ) -> tf.Tensor:
-        gh_x, gh_w = hermgauss(self.num_gauss_hermite_points)
-        p = self.invlink.prob_is_largest(Y, Fmu, Fvar, gh_x, gh_w)
-        den = p * (1.0 - self.invlink.epsilon) + (1.0 - p) * (self.invlink.eps_k1)
-        return den
+        pass
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return self.invlink(F)
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        p = self.conditional_mean(X, F)
-        return p - tf.square(p)
+        pass

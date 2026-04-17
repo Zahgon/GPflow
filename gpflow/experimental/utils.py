@@ -35,16 +35,6 @@ def experimental(func: C) -> C:
 
     @wraps(func)
     def wrap_experimental(*args: Any, **kwargs: Any) -> Any:
-        nonlocal has_warned
-
-        if not has_warned:
-            name = f"{func.__module__}.{func.__qualname__}"
-            warn(
-                f"You're calling {name} which is considered *experimental*."
-                " Expect: breaking changes, poor documentation, and bugs."
-            )
-            has_warned = True
-
-        return func(*args, **kwargs)
+        pass
 
     return cast(C, wrap_experimental)

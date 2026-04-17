@@ -78,7 +78,7 @@ class InducingPointsBase(InducingVariables):
         "return: []",
     )
     def num_inducing(self) -> Optional[tf.Tensor]:
-        return tf.shape(self.Z)[0]
+        pass
 
     @property
     def shape(self) -> Shape:
@@ -122,4 +122,4 @@ class Multiscale(InducingPointsBase):
         Custom version of _square_dist that allows sc to provide per-datapoint length
         scales.
         """
-        return tf.reduce_sum(tf.square((tf.expand_dims(A, 1) - tf.expand_dims(B, 0)) / sc), 2)
+        pass

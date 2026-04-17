@@ -256,28 +256,7 @@ class GPModel(BayesianModel):
             If True, draw correlated samples over the outputs.
             If False, draw samples that are uncorrelated over the outputs.
         """
-        if full_cov and full_output_cov:
-            raise NotImplementedError(
-                "The combination of both `full_cov` and `full_output_cov` is not supported."
-            )
-
-        # check below for shape info
-        mean, cov = self.predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
-        if full_cov:
-            # mean: [..., N, P]
-            # cov: [..., P, N, N]
-            mean_for_sample = tf.linalg.adjoint(mean)  # [..., P, N]
-            samples = sample_mvn(
-                mean_for_sample, cov, full_cov, num_samples=num_samples
-            )  # [..., (S), P, N]
-            samples = tf.linalg.adjoint(samples)  # [..., (S), N, P]
-        else:
-            # mean: [..., N, P]
-            # cov: [..., N, P] or [..., N, P, P]
-            samples = sample_mvn(
-                mean, cov, full_output_cov, num_samples=num_samples
-            )  # [..., (S), N, P]
-        return samples  # [..., (S), N, P]
+        pass
 
     @check_shapes(
         "Xnew: [batch..., N, D]",
@@ -318,11 +297,7 @@ class GPModel(BayesianModel):
             If ``True``, compute the full covariance between the outputs.
             If ``False``, assumes outputs are independent.
         """
-        # See https://github.com/GPflow/GPflow/issues/1461
-        assert_params_false(self.predict_y, full_cov=full_cov, full_output_cov=full_output_cov)
-
-        f_mean, f_var = self.predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
-        return self.likelihood.predict_mean_and_var(Xnew, f_mean, f_var)
+        pass
 
     @check_shapes(
         "data[0]: [batch..., N, D]",
@@ -335,9 +310,4 @@ class GPModel(BayesianModel):
         """
         Compute the log of the probability density of the data at the new data points.
         """
-        # See https://github.com/GPflow/GPflow/issues/1461
-        assert_params_false(self.predict_y, full_cov=full_cov, full_output_cov=full_output_cov)
-
-        X, Y = data
-        f_mean, f_var = self.predict_f(X, full_cov=full_cov, full_output_cov=full_output_cov)
-        return self.likelihood.predict_log_density(X, f_mean, f_var, Y)
+        pass

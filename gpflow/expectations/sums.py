@@ -44,8 +44,7 @@ def _expectation_gaussian_sum(
 
     :return: N
     """
-    exps = [expectation(p, k, nghp=nghp) for k in kernel.kernels]
-    return reduce(tf.add, exps)
+    pass
 
 
 @dispatch.expectation.register(Gaussian, kernels.Sum, InducingPoints, NoneType, NoneType)
@@ -69,8 +68,7 @@ def _expectation_gaussian_sum_inducingpoints(
 
     :return: NxM
     """
-    exps = [expectation(p, (k, inducing_variable), nghp=nghp) for k in kernel.kernels]
-    return reduce(tf.add, exps)
+    pass
 
 
 @dispatch.expectation.register(
@@ -96,8 +94,7 @@ def _expectation_gaussian_linear__sum_inducingpoints(
 
     :return: NxQxM
     """
-    exps = [expectation(p, mean, (k, inducing_variable), nghp=nghp) for k in kernel.kernels]
-    return reduce(tf.add, exps)
+    pass
 
 
 @dispatch.expectation.register(MarkovGaussian, mfn.Identity, NoneType, kernels.Sum, InducingPoints)
@@ -121,8 +118,7 @@ def _expectation_markov__sum_inducingpoints(
 
     :return: NxDxM
     """
-    exps = [expectation(p, mean, (k, inducing_variable), nghp=nghp) for k in kernel.kernels]
-    return reduce(tf.add, exps)
+    pass
 
 
 @dispatch.expectation.register(
@@ -149,18 +145,4 @@ def _expectation_gaussian_sum_inducingpoints__sum_inducingpoints(
 
     :return: NxM1xM2
     """
-    crossexps = []
-
-    if kern1 == kern2 and feat1 == feat2:  # avoid duplicate computation by using transposes
-        for i, k1 in enumerate(kern1.kernels):
-            crossexps.append(expectation(p, (k1, feat1), (k1, feat1), nghp=nghp))
-
-            for k2 in kern1.kernels[:i]:
-                eKK = expectation(p, (k1, feat1), (k2, feat2), nghp=nghp)
-                eKK += tf.linalg.adjoint(eKK)
-                crossexps.append(eKK)
-    else:
-        for k1, k2 in itertools.product(kern1.kernels, kern2.kernels):
-            crossexps.append(expectation(p, (k1, feat1), (k2, feat2), nghp=nghp))
-
-    return reduce(tf.add, crossexps)
+    pass

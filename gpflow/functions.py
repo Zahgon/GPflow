@@ -153,13 +153,7 @@ class Identity(Linear, Function):
 
     @property
     def b(self) -> tf.Tensor:  # type: ignore[override]
-        if self.input_dim is None:
-            raise ValueError(
-                "An input_dim needs to be specified when using the "
-                "`Identity` mean function in combination with expectations."
-            )
-
-        return tf.zeros(self.input_dim, dtype=default_float())
+        pass
 
     @A.setter  # type: ignore[attr-defined, no-redef]
     def A(self, A: tf.Tensor) -> None:
@@ -316,8 +310,8 @@ class SwitchedMeanFunction(SwitchedFunction):
 
     @property
     def meanfunctions(self) -> Collection[MeanFunction]:
-        return self.functions
+        pass
 
     @meanfunctions.setter
     def meanfunctions(self, value: Collection[MeanFunction]) -> None:
-        self.function_list = value
+        pass

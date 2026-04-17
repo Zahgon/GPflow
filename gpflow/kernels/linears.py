@@ -53,8 +53,7 @@ class Linear(Kernel):
         """
         Whether ARD behaviour is active.
         """
-        ndims: int = self.variance.shape.ndims
-        return ndims > 0
+        pass
 
     @inherit_check_shapes
     def K(self, X: TensorType, X2: Optional[TensorType] = None) -> tf.Tensor:

@@ -603,8 +603,7 @@ def separate_independent_conditional_implementation(
         def single_gp_conditional(
             t: Tuple[tf.Tensor, ...]
         ) -> MeanAndVariance:  # pragma: no cover - tf.map_fn is invisible to codecov
-            Kmm, Kmn, Knn, f, q_sqrt = t
-            return base_conditional(Kmn, Kmm, Knn, f, full_cov=full_cov, q_sqrt=q_sqrt, white=white)
+            pass
 
     else:
         base_conditional_args_to_map = (Kmms, Kmns, Knns, fs)
@@ -612,8 +611,7 @@ def separate_independent_conditional_implementation(
         def single_gp_conditional(
             t: Tuple[tf.Tensor, ...]
         ) -> MeanAndVariance:  # pragma: no cover - tf.map_fn is invisible to codecov
-            Kmm, Kmn, Knn, f = t
-            return base_conditional(Kmn, Kmm, Knn, f, full_cov=full_cov, q_sqrt=q_sqrt, white=white)
+            pass
 
     rmu, rvar = tf.map_fn(
         single_gp_conditional, base_conditional_args_to_map, (default_float(), default_float())

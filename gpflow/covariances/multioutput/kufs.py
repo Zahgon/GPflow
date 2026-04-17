@@ -43,7 +43,7 @@ from ..dispatch import Kuf
 def Kuf_generic(
     inducing_variable: InducingPoints, kernel: MultioutputKernel, Xnew: TensorType
 ) -> tf.Tensor:
-    return kernel(inducing_variable.Z, Xnew, full_cov=True, full_output_cov=True)
+    pass
 
 
 @Kuf.register(SharedIndependentInducingVariables, SharedIndependent, object)
@@ -57,7 +57,7 @@ def Kuf_shared_shared(
     kernel: SharedIndependent,
     Xnew: tf.Tensor,
 ) -> tf.Tensor:
-    return Kuf(inducing_variable.inducing_variable, kernel.kernel, Xnew)
+    pass
 
 
 @Kuf.register(SeparateIndependentInducingVariables, SharedIndependent, object)
@@ -71,9 +71,7 @@ def Kuf_separate_shared(
     kernel: SharedIndependent,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    return tf.stack(
-        [Kuf(f, kernel.kernel, Xnew) for f in inducing_variable.inducing_variable_list], axis=0
-    )
+    pass
 
 
 @Kuf.register(SharedIndependentInducingVariables, SeparateIndependent, object)
@@ -87,9 +85,7 @@ def Kuf_shared_separate(
     kernel: SeparateIndependent,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    return tf.stack(
-        [Kuf(inducing_variable.inducing_variable, k, Xnew) for k in kernel.kernels], axis=0
-    )
+    pass
 
 
 @Kuf.register(SeparateIndependentInducingVariables, SeparateIndependent, object)
@@ -103,16 +99,7 @@ def Kuf_separate_separate(
     kernel: SeparateIndependent,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    n_iv = len(inducing_variable.inducing_variable_list)
-    n_k = len(kernel.kernels)
-    assert (
-        n_iv == n_k
-    ), f"Must have same number of inducing variables and kernels. Found {n_iv} and {n_k}."
-
-    Kufs = [
-        Kuf(f, k, Xnew) for f, k in zip(inducing_variable.inducing_variable_list, kernel.kernels)
-    ]
-    return tf.stack(Kufs, axis=0)
+    pass
 
 
 @check_shapes(
@@ -135,8 +122,7 @@ def _fallback_Kuf(
     kernel: LinearCoregionalization,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    K = tf.transpose(kuf_impl(inducing_variable, kernel, Xnew), [1, 0, 2])
-    return K[:, :, :, None] * tf.transpose(kernel.W)[None, :, None, :]
+    pass
 
 
 @Kuf.register(
@@ -155,10 +141,7 @@ def Kuf_fallback_separate_linear_coregionalization(
     kernel: LinearCoregionalization,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    kuf_impl = Kuf.dispatch_or_raise(
-        SeparateIndependentInducingVariables, SeparateIndependent, object
-    )
-    return _fallback_Kuf(kuf_impl, inducing_variable, kernel, Xnew)
+    pass
 
 
 @Kuf.register(
@@ -177,10 +160,7 @@ def Kuf_fallback_shared_linear_coregionalization(
     kernel: LinearCoregionalization,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    kuf_impl = Kuf.dispatch_or_raise(
-        SharedIndependentInducingVariables, SeparateIndependent, object
-    )
-    return _fallback_Kuf(kuf_impl, inducing_variable, kernel, Xnew)
+    pass
 
 
 @Kuf.register(SharedIndependentInducingVariables, LinearCoregionalization, object)
@@ -195,9 +175,7 @@ def Kuf_shared_linear_coregionalization(
     kernel: LinearCoregionalization,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    return tf.stack(
-        [Kuf(inducing_variable.inducing_variable, k, Xnew) for k in kernel.kernels], axis=0
-    )
+    pass
 
 
 @Kuf.register(SeparateIndependentInducingVariables, LinearCoregionalization, object)
@@ -212,13 +190,4 @@ def Kuf_separate_linear_coregionalization(
     kernel: LinearCoregionalization,
     Xnew: TensorType,
 ) -> tf.Tensor:
-    n_iv = len(inducing_variable.inducing_variable_list)
-    n_k = len(kernel.kernels)
-    assert (
-        n_iv == n_k
-    ), f"Must have same number of inducing variables and kernels. Found {n_iv} and {n_k}."
-
-    return tf.stack(
-        [Kuf(f, k, Xnew) for f, k in zip(inducing_variable.inducing_variable_list, kernel.kernels)],
-        axis=0,
-    )
+    pass

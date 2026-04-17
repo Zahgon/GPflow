@@ -86,47 +86,7 @@ def _quadrature_expectation_gaussian(
     General handling of quadrature expectations for Gaussians and DiagonalGaussians
     Fallback method for missing analytic expectations
     """
-    nghp = 100 if nghp is None else nghp
-
-    # logger.warning(
-    #     "Quadrature is used to calculate the expectation. This means that "
-    #     "an analytical implementations is not available for the given combination."
-    # )
-
-    if obj1 is None:
-        raise NotImplementedError("First object cannot be None.")
-
-    if not isinstance(p, DiagonalGaussian):
-        cov = p.cov
-    else:
-        if (
-            isinstance(obj1, kernels.Kernel)
-            and isinstance(obj2, kernels.Kernel)
-            and obj1.on_separate_dims(obj2)
-        ):  # no joint expectations required
-            eKxz1 = quadrature_expectation(
-                p, cast(PackedExpectationObject, (obj1, inducing_variable1)), nghp=nghp
-            )
-            eKxz2 = quadrature_expectation(
-                p, cast(PackedExpectationObject, (obj2, inducing_variable2)), nghp=nghp
-            )
-            return eKxz1[:, :, None] * eKxz2[:, None, :]
-        cov = tf.linalg.diag(p.cov)
-
-    if obj2 is None:
-
-        def eval_func(x: TensorType) -> tf.Tensor:
-            fn = get_eval_func(obj1, inducing_variable1)
-            return fn(x)
-
-    else:
-
-        def eval_func(x: TensorType) -> tf.Tensor:
-            fn1 = get_eval_func(obj1, inducing_variable1, np.s_[:, :, None])
-            fn2 = get_eval_func(obj2, inducing_variable2, np.s_[:, None, :])
-            return fn1(x) * fn2(x)
-
-    return mvnquad(eval_func, p.mu, cov, nghp)
+    pass
 
 
 @dispatch.quadrature_expectation.register(
@@ -153,37 +113,4 @@ def _quadrature_expectation_markov(
                if one requires e.g. <x_{n+1} K_{x_n, Z}>_p(x_{n:n+1}), compute the
                transpose and then transpose the result of the expectation
     """
-    nghp = 40 if nghp is None else nghp
-
-    # logger.warning(
-    #     "Quadrature is used to calculate the expectation. This means that "
-    #     "an analytical implementations is not available for the given combination."
-    # )
-
-    if obj2 is None:
-
-        def eval_func(x: TensorType) -> tf.Tensor:
-            return get_eval_func(obj1, inducing_variable1)(x)
-
-        mu, cov = p.mu[:-1], p.cov[0, :-1]  # cross covariances are not needed
-    elif obj1 is None:
-
-        def eval_func(x: TensorType) -> tf.Tensor:
-            return get_eval_func(obj2, inducing_variable2)(x)
-
-        mu, cov = p.mu[1:], p.cov[0, 1:]  # cross covariances are not needed
-    else:
-
-        def eval_func(x: TensorType) -> tf.Tensor:
-            x1 = tf.split(x, 2, 1)[0]
-            x2 = tf.split(x, 2, 1)[1]
-            res1 = get_eval_func(obj1, inducing_variable1, np.s_[:, :, None])(x1)
-            res2 = get_eval_func(obj2, inducing_variable2, np.s_[:, None, :])(x2)
-            return res1 * res2
-
-        mu = tf.concat((p.mu[:-1, :], p.mu[1:, :]), 1)  # Nx2D
-        cov_top = tf.concat((p.cov[0, :-1, :, :], p.cov[1, :-1, :, :]), 2)  # NxDx2D
-        cov_bottom = tf.concat((tf.linalg.adjoint(p.cov[1, :-1, :, :]), p.cov[0, 1:, :, :]), 2)
-        cov = tf.concat((cov_top, cov_bottom), 1)  # Nx2Dx2D
-
-    return mvnquad(eval_func, mu, cov, nghp)
+    pass

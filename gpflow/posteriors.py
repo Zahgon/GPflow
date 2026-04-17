@@ -71,7 +71,7 @@ class _DeltaDist(_QDistribution):
 
     @property
     def q_sqrt(self) -> Optional[tf.Tensor]:
-        return None
+        pass
 
 
 class _DiagNormal(_QDistribution):
@@ -171,7 +171,7 @@ class PrecomputedValue:
 
 @register_get_shape(PrecomputedValue)
 def get_precomputed_value_shape(shaped: PrecomputedValue, context: ErrorContext) -> Shape:
-    return get_shape(shaped.value, context)
+    pass
 
 
 def _validate_precompute_cache_type(
@@ -666,14 +666,14 @@ class BasePosterior(AbstractPosterior):
         "return: [N, P]",
     )
     def q_mu(self) -> tf.Tensor:
-        return self._q_dist.q_mu
+        pass
 
     @property  # type: ignore[misc]
     @check_shapes(
         "return: [N_P_or_P_N_N...]",
     )
     def q_sqrt(self) -> tf.Tensor:
-        return self._q_dist.q_sqrt
+        pass
 
     @check_shapes(
         "q_mu: [N, P]",
@@ -1047,14 +1047,14 @@ def _get_posterior_base_case(
     kernel: Kernel, inducing_variable: InducingVariables
 ) -> Type[BasePosterior]:
     # independent single output
-    return IndependentPosteriorSingleOutput
+    pass
 
 
 @get_posterior_class.register(kernels.MultioutputKernel, InducingPoints)
 def _get_posterior_fully_correlated_mo(
     kernel: Kernel, inducing_variable: InducingVariables
 ) -> Type[BasePosterior]:
-    return FullyCorrelatedPosterior
+    pass
 
 
 @get_posterior_class.register(
@@ -1065,7 +1065,7 @@ def _get_posterior_independent_mo(
     kernel: Kernel, inducing_variable: InducingVariables
 ) -> Type[BasePosterior]:
     # independent multi-output
-    return IndependentPosteriorMultiOutput
+    pass
 
 
 @get_posterior_class.register(
@@ -1075,7 +1075,7 @@ def _get_posterior_independent_mo(
 def _get_posterior_independentlatent_mo_fallback(
     kernel: Kernel, inducing_variable: InducingVariables
 ) -> Type[BasePosterior]:
-    return FallbackIndependentLatentPosterior
+    pass
 
 
 @get_posterior_class.register(
@@ -1086,7 +1086,7 @@ def _get_posterior_linearcoregionalization_mo_efficient(
     kernel: Kernel, inducing_variable: InducingVariables
 ) -> Type[BasePosterior]:
     # Linear mixing---efficient multi-output
-    return LinearCoregionalizationPosterior
+    pass
 
 
 def create_posterior(

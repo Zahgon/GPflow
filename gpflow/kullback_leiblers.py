@@ -42,11 +42,7 @@ def _(
     q_sqrt: TensorType,
     whiten: bool = False,
 ) -> tf.Tensor:
-    if whiten:
-        return gauss_kl(q_mu, q_sqrt, None)
-    else:
-        K = Kuu(inducing_variable, kernel, jitter=default_jitter())  # [P, M, M] or [M, M]
-        return gauss_kl(q_mu, q_sqrt, K)
+    pass
 
 
 @check_shapes(

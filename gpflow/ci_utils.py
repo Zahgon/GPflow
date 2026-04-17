@@ -29,14 +29,11 @@ def is_continuous_integration() -> bool:
     Whether we are running on CI is determined by the presence of the `CI`
     environment variable.
     """
-    if "DOCS" in os.environ:
-        return False
-
-    return "CI" in os.environ
+    pass
 
 
 def reduce_in_tests(n: int, test_n: int = 2) -> int:
-    return test_n if is_continuous_integration() else n
+    pass
 
 
 def subclasses(cls: Type[Any]) -> Iterable[Type[Any]]:

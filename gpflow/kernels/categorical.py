@@ -98,12 +98,7 @@ class Categorical(Kernel):
         Z is a tensor whose entries are the latent space values of the relevant label
         i.e. Z[3] is the value of label 3.
         """
-        # This sets Z[0] = 0 and then creates Z[1:] by adding the deltas.
-        #  This is achieved by using a lower diagonal matrix of ones,
-        #  so Z[1] = _Z_deltas[0], Z[2] = _Z_deltas[0] + _Z_deltas[1], etc.
-        Z = tf.concat([tf.constant(0, shape=(1,), dtype=tf.float64), tf.squeeze(self._Z_deltas)], 0)
-        m = tf.linalg.band_part(tf.ones([tf.size(Z), tf.size(Z)], dtype=tf.float64), -1, 0)
-        return tf.expand_dims(tf.linalg.matvec(m, Z), -1)
+        pass
 
     def K(self, X: TensorType, X2: Optional[TensorType] = None) -> tf.Tensor:
         return self.wrapped_kernel.K(

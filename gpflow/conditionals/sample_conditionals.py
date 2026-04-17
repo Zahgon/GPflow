@@ -58,34 +58,4 @@ def _sample_conditional(
 
     :return: samples, mean, cov
     """
-
-    if full_cov and full_output_cov:
-        msg = "The combination of both `full_cov` and `full_output_cov` is not permitted."
-        raise NotImplementedError(msg)
-
-    mean, cov = conditional(
-        Xnew,
-        inducing_variable,
-        kernel,
-        f,
-        q_sqrt=q_sqrt,
-        white=white,
-        full_cov=full_cov,
-        full_output_cov=full_output_cov,
-    )
-    if full_cov:
-        # mean: [..., N, P]
-        # cov: [..., P, N, N]
-        mean_for_sample = tf.linalg.adjoint(mean)  # [..., P, N]
-        samples = sample_mvn(
-            mean_for_sample, cov, full_cov=True, num_samples=num_samples
-        )  # [..., (S), P, N]
-        samples = tf.linalg.adjoint(samples)  # [..., (S), N, P]
-    else:
-        # mean: [..., N, P]
-        # cov: [..., N, P] or [..., N, P, P]
-        samples = sample_mvn(
-            mean, cov, full_cov=full_output_cov, num_samples=num_samples
-        )  # [..., (S), N, P]
-
-    return samples, mean, cov
+    pass

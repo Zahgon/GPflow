@@ -46,7 +46,7 @@ class ProbabilityDistribution(ABC):
 def get_probability_distribution_shape(
     shaped: ProbabilityDistribution, context: ErrorContext
 ) -> Shape:
-    return shaped.shape
+    pass
 
 
 class Gaussian(ProbabilityDistribution):

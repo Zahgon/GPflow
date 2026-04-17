@@ -80,7 +80,7 @@ class FallbackSharedIndependentInducingVariables(MultioutputInducingVariables):
         "return: []",
     )
     def num_inducing(self) -> tf.Tensor:
-        return self.inducing_variable.num_inducing
+        pass
 
     @property
     def inducing_variables(self) -> Tuple[InducingVariables]:
@@ -140,15 +140,7 @@ class FallbackSeparateIndependentInducingVariables(MultioutputInducingVariables)
         "return: []",
     )
     def num_inducing(self) -> tf.Tensor:
-        num_inducings = tf.stack([iv.num_inducing for iv in self.inducing_variable_list])
-        num_inducing, _ = tf.unique(num_inducings)
-        tf.debugging.assert_equal(
-            tf.shape(num_inducing),
-            [1],
-            message="'num_inducing' does not make sense"
-            " when children have different numbers of inducing points.",
-        )
-        return num_inducing[0]
+        pass
 
     @property
     def inducing_variables(self) -> Tuple[InducingVariables, ...]:

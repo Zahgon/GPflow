@@ -53,7 +53,7 @@ def _expectation_gaussian__linear_inducingpoints(
 
     :return: NxDxM
     """
-    return tf.linalg.adjoint(expectation(p, (kernel, inducing_variable), mean))
+    pass
 
 
 @dispatch.expectation.register(
@@ -79,7 +79,7 @@ def _expectation_gaussian_kernel_inducingvariables__meanfunction(
 
     :return: NxMxQ
     """
-    return tf.linalg.adjoint(expectation(p, mean, (kernel, inducing_variable), nghp=nghp))
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Constant, NoneType, kernels.Kernel, InducingPoints)
@@ -104,10 +104,7 @@ def _expectation_gaussian_constant__kernel_inducingpoints(
 
     :return: NxQxM
     """
-    c = constant_mean(p.mu)  # NxQ
-    eKxz = expectation(p, (kernel, inducing_variable), nghp=nghp)  # NxM
-
-    return c[..., None] * eKxz[:, None, :]
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Linear, NoneType, kernels.Kernel, InducingPoints)
@@ -132,15 +129,7 @@ def _expectation_gaussian_linear__kernel_inducingpoints(
 
     :return: NxQxM
     """
-    N = tf.shape(p.mu)[0]
-    D = tf.shape(p.mu)[1]
-    exKxz = expectation(p, mfn.Identity(D), (kernel, inducing_variable), nghp=nghp)
-    eKxz = expectation(p, (kernel, inducing_variable), nghp=nghp)
-    eAxKxz = tf.linalg.matmul(
-        tf.tile(linear_mean.A[None, :, :], (N, 1, 1)), exKxz, transpose_a=True
-    )
-    ebKxz = linear_mean.b[None, :, None] * eKxz[:, None, :]
-    return eAxKxz + ebKxz
+    pass
 
 
 @dispatch.expectation.register(Gaussian, mfn.Identity, NoneType, kernels.Kernel, InducingPoints)
@@ -178,13 +167,7 @@ def _expectation_diagonal_generic(
     feat2: Optional[InducingVariables],
     nghp: None = None,
 ) -> tf.Tensor:
-    gaussian = Gaussian(p.mu, tf.linalg.diag(p.cov))
-    return expectation(
-        gaussian,
-        cast(PackedExpectationObject, (obj1, feat1)),
-        cast(PackedExpectationObject, (obj2, feat2)),
-        nghp=nghp,
-    )
+    pass
 
 
 # Catching missing MarkovGaussian implementations by converting to Gaussian (when indifferent):
@@ -206,16 +189,4 @@ def _expectation_markov_generic(
     associated with x_n, whereas obj2 with x_{n+1}
 
     """
-    if obj2 is None:
-        gaussian = Gaussian(p.mu[:-1], p.cov[0, :-1])
-        return expectation(gaussian, cast(PackedExpectationObject, (obj1, feat1)), nghp=nghp)
-    elif obj1 is None:
-        gaussian = Gaussian(p.mu[1:], p.cov[0, 1:])
-        return expectation(gaussian, cast(PackedExpectationObject, (obj2, feat2)), nghp=nghp)
-    else:
-        return expectation(
-            p,
-            cast(PackedExpectationObject, (obj1, feat1)),
-            cast(PackedExpectationObject, (obj2, feat2)),
-            nghp=nghp,
-        )
+    pass

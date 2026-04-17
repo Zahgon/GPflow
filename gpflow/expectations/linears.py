@@ -42,11 +42,7 @@ def _expectation_gaussian_linear(
 
     :return: N
     """
-    # use only active dimensions
-    Xmu, _ = kernel.slice(p.mu, None)
-    Xcov = kernel.slice_cov(p.cov)
-
-    return tf.reduce_sum(kernel.variance * (tf.linalg.diag_part(Xcov) + Xmu ** 2), 1)
+    pass
 
 
 @dispatch.expectation.register(Gaussian, kernels.Linear, InducingPoints, NoneType, NoneType)
@@ -70,10 +66,7 @@ def _expectation_gaussian_linear_inducingpoints(
 
     :return: NxM
     """
-    # use only active dimensions
-    Z, Xmu = kernel.slice(inducing_variable.Z, p.mu)
-
-    return tf.linalg.matmul(Xmu, Z * kernel.variance, transpose_b=True)
+    pass
 
 
 @dispatch.expectation.register(Gaussian, kernels.Linear, InducingPoints, mfn.Identity, NoneType)
@@ -97,12 +90,7 @@ def _expectation_gaussian_linear_inducingpoints__identity(
 
     :return: NxMxD
     """
-    Xmu, Xcov = p.mu, p.cov
-
-    N = tf.shape(Xmu)[0]
-    var_Z = kernel.variance * inducing_variable.Z  # MxD
-    tiled_Z = tf.tile(tf.expand_dims(var_Z, 0), (N, 1, 1))  # NxMxD
-    return tf.linalg.matmul(tiled_Z, Xcov + (Xmu[..., None] * Xmu[:, None, :]))
+    pass
 
 
 @dispatch.expectation.register(
@@ -129,13 +117,7 @@ def _expectation_markov_linear_inducingpoints__identity(
 
     :return: NxMxD
     """
-    Xmu, Xcov = p.mu, p.cov
-
-    N = tf.shape(Xmu)[0] - 1
-    var_Z = kernel.variance * inducing_variable.Z  # MxD
-    tiled_Z = tf.tile(tf.expand_dims(var_Z, 0), (N, 1, 1))  # NxMxD
-    eXX = Xcov[1, :-1] + (Xmu[:-1][..., None] * Xmu[1:][:, None, :])  # NxDxD
-    return tf.linalg.matmul(tiled_Z, eXX)
+    pass
 
 
 @dispatch.expectation.register(
@@ -165,28 +147,4 @@ def _expectation_gaussian_linear_inducingpoints__linear_inducingpoints(
 
     :return: NxMxM
     """
-    if kern1.on_separate_dims(kern2) and isinstance(
-        p, DiagonalGaussian
-    ):  # no joint expectations required
-        eKxz1 = expectation(p, (kern1, feat1))
-        eKxz2 = expectation(p, (kern2, feat2))
-        return eKxz1[:, :, None] * eKxz2[:, None, :]
-
-    if kern1 != kern2 or feat1 != feat2:
-        raise NotImplementedError(
-            "The expectation over two kernels has only an "
-            "analytical implementation if both kernels are equal."
-        )
-
-    kernel = kern1
-    inducing_variable = feat1
-
-    # use only active dimensions
-    Xcov = kernel.slice_cov(tf.linalg.diag(p.cov) if isinstance(p, DiagonalGaussian) else p.cov)
-    Z, Xmu = kernel.slice(inducing_variable.Z, p.mu)
-
-    N = tf.shape(Xmu)[0]
-    var_Z = kernel.variance * Z
-    tiled_Z = tf.tile(tf.expand_dims(var_Z, 0), (N, 1, 1))  # NxMxD
-    XX = Xcov + tf.expand_dims(Xmu, 1) * tf.expand_dims(Xmu, 2)  # NxDxD
-    return tf.linalg.matmul(tf.linalg.matmul(tiled_Z, XX), tiled_Z, transpose_b=True)
+    pass

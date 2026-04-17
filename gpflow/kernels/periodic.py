@@ -74,13 +74,13 @@ class Periodic(Kernel):
 
     @property
     def active_dims(self) -> NormalizedActiveDims:
-        return self.base_kernel.active_dims
+        pass
 
     @active_dims.setter
     def active_dims(self, value: ActiveDims) -> None:
         # type-ignore below is because mypy doesn't understand that getter and the setter of
         # `active_dims` have different types.
-        self.base_kernel.active_dims = value  # type: ignore[assignment]
+        pass
 
     @inherit_check_shapes
     def K_diag(self, X: TensorType) -> tf.Tensor:

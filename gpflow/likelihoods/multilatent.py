@@ -80,7 +80,7 @@ class MultiLatentTFPConditional(MultiLatentLikelihood):
         :param F: function evaluation Tensor, with shape [..., latent_dim]
         :returns: mean [..., 1]
         """
-        return self.conditional_distribution(F).mean()
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
@@ -90,7 +90,7 @@ class MultiLatentTFPConditional(MultiLatentLikelihood):
         :param F: function evaluation Tensor, with shape [..., latent_dim]
         :returns: variance [..., 1]
         """
-        return self.conditional_distribution(F).variance()
+        pass
 
 
 class HeteroskedasticTFPConditional(MultiLatentTFPConditional):

@@ -221,8 +221,7 @@ class Scipy:
                 _tf_eval = tf.function(_tf_eval, **tf_fun_args)
 
         def _eval(x: AnyNDArray) -> Tuple[AnyNDArray, AnyNDArray]:
-            loss, grad = _tf_eval(tf.convert_to_tensor(x))
-            return loss.numpy().astype(np.float64), grad.numpy().astype(np.float64)
+            pass
 
         return _eval
 
@@ -260,15 +259,7 @@ class Scipy:
         step: int = 0
 
         def _callback(x: AnyNDArray) -> None:
-            nonlocal step
-
-            if isinstance(step_callback, Monitor):
-                step_callback(step)
-            else:
-                values = cls.unpack_tensors(variables, x)
-                step_callback(step, variables, values)
-
-            step += 1
+            pass
 
         return _callback
 
@@ -283,9 +274,7 @@ class Scipy:
         # with another callback.
 
         def _callback(x: AnyNDArray) -> None:
-            if callback is not None:
-                callback(x)
-            history.append(minimize_func(x)[0])
+            pass
 
         return _callback
 

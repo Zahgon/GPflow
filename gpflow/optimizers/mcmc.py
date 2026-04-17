@@ -69,8 +69,7 @@ class SamplingHelper:
     @property
     def current_state(self) -> Sequence[tf.Variable]:
         """Return the current state of the unconstrained variables, used in HMC."""
-
-        return self._variables
+        pass
 
     @property
     def target_log_prob_fn(self) -> Callable[..., tf.Tensor]:
@@ -78,38 +77,7 @@ class SamplingHelper:
         The target log probability, adjusted to allow for optimisation to occur on the tracked
         unconstrained underlying variables.
         """
-        variables_list = self.current_state
-
-        @tf.custom_gradient
-        def _target_log_prob_fn_closure(
-            *variables: tf.Variable,
-        ) -> Tuple[tf.Tensor, Callable[..., Tuple[tf.Tensor, Sequence[None]]]]:
-            for v_old, v_new in zip(variables_list, variables):
-                v_old.assign(v_new)
-
-            with tf.GradientTape(watch_accessed_variables=False) as tape:
-                tape.watch(variables_list)
-                log_prob = self._target_log_prob_fn()
-                # Now need to correct for the fact that the prob fn is evaluated on the
-                # constrained space while we wish to evaluate it in the unconstrained space
-                for param in self._parameters:
-                    if param.transform is not None:
-                        x = param.unconstrained_variable
-                        log_det_jacobian = param.transform.forward_log_det_jacobian(
-                            x, x.shape.ndims
-                        )
-                        log_prob += tf.reduce_sum(log_det_jacobian)
-
-            @tf.function
-            def grad_fn(
-                dy: tf.Tensor, variables: Optional[tf.Tensor] = None
-            ) -> Tuple[tf.Tensor, Sequence[None]]:
-                grad = tape.gradient(log_prob, variables_list)
-                return grad, [None] * len(variables_list)
-
-            return log_prob, grad_fn
-
-        return _target_log_prob_fn_closure  # type: ignore[no-any-return]
+        pass
 
     def convert_to_constrained_values(
         self, hmc_samples: Sequence[tf.Tensor]
@@ -120,11 +88,4 @@ class SamplingHelper:
         passed to the constructor; for parameters that have a transform, the
         constrained representation is returned.
         """
-        values = []
-        for hmc_value, param in zip(hmc_samples, self._parameters):
-            if param.transform is not None:
-                value = param.transform.forward(hmc_value)
-            else:
-                value = hmc_value
-            values.append(value)
-        return values
+        pass

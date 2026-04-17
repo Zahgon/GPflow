@@ -165,12 +165,8 @@ class Convolutional(Kernel):
 
     @property
     def patch_len(self) -> int:
-        return cast(int, np.prod(self.patch_shape))
+        pass
 
     @property
     def num_patches(self) -> int:
-        return (
-            (self.image_shape[0] - self.patch_shape[0] + 1)
-            * (self.image_shape[1] - self.patch_shape[1] + 1)
-            * self.colour_channels
-        )
+        pass

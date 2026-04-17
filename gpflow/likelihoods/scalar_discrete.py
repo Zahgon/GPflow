@@ -57,11 +57,11 @@ class Poisson(ScalarLikelihood):
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return self.invlink(F) * self.binsize
+        pass
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return self.invlink(F) * self.binsize
+        pass
 
     @inherit_check_shapes
     def _variational_expectations(
@@ -93,28 +93,21 @@ class Bernoulli(ScalarLikelihood):
     def _predict_mean_and_var(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType
     ) -> MeanAndVariance:
-        if self.invlink is inv_probit:
-            p = inv_probit(Fmu / tf.sqrt(1 + Fvar))
-            return p, p - tf.square(p)
-        else:
-            # for other invlink, use quadrature
-            return super()._predict_mean_and_var(X, Fmu, Fvar)
+        pass
 
     @inherit_check_shapes
     def _predict_log_density(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType, Y: TensorType
     ) -> tf.Tensor:
-        p = self.predict_mean_and_var(X, Fmu, Fvar)[0]
-        return tf.reduce_sum(logdensities.bernoulli(Y, p), axis=-1)
+        pass
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return self.invlink(F)
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        p = self.conditional_mean(X, F)
-        return p - (p ** 2)
+        pass
 
 
 class Ordinal(ScalarLikelihood):
@@ -177,22 +170,12 @@ class Ordinal(ScalarLikelihood):
 
         Note that a matrix of F values is flattened.
         """
-        scaled_bins_left = tf.concat([self.bin_edges / self.sigma, np.array([np.inf])], 0)
-        scaled_bins_right = tf.concat([np.array([-np.inf]), self.bin_edges / self.sigma], 0)
-        return inv_probit(scaled_bins_left - tf.reshape(F, (-1, 1)) / self.sigma) - inv_probit(
-            scaled_bins_right - tf.reshape(F, (-1, 1)) / self.sigma
-        )
+        pass
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        phi = self._make_phi(F)
-        Ys = tf.reshape(np.arange(self.num_bins, dtype=default_float()), (-1, 1))
-        return tf.reshape(tf.linalg.matmul(phi, Ys), tf.shape(F))
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        phi = self._make_phi(F)
-        Ys = tf.reshape(np.arange(self.num_bins, dtype=default_float()), (-1, 1))
-        E_y = phi @ Ys
-        E_y2 = phi @ (Ys ** 2)
-        return tf.reshape(E_y2 - E_y ** 2, tf.shape(F))
+        pass

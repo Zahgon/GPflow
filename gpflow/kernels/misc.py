@@ -78,8 +78,7 @@ class ArcCosine(Kernel):
         """
         Whether ARD behaviour is active.
         """
-        ndims: int = self.weight_variances.shape.ndims
-        return ndims > 0
+        pass
 
     @check_shapes(
         "X: [batch..., N, D]",

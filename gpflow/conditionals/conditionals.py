@@ -73,18 +73,7 @@ def _sparse_conditional(
     :param white: boolean of whether to use the whitened representation
     :return: mean and variance
     """
-    posterior_class = get_posterior_class(kernel, inducing_variable)
-
-    posterior: BasePosterior = posterior_class(
-        kernel,
-        inducing_variable,
-        f,
-        q_sqrt,
-        whiten=white,
-        mean_function=None,
-        precompute_cache=None,
-    )
-    return posterior.fused_predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+    pass
 
 
 @conditional._gpflow_internal_register(object, object, Kernel, object)
@@ -145,12 +134,4 @@ def _dense_conditional(
         described above.
     :return: mean and variance
     """
-    posterior = VGPPosterior(
-        kernel=kernel,
-        X=X,
-        q_mu=f,
-        q_sqrt=q_sqrt,
-        white=white,
-        precompute_cache=None,
-    )
-    return posterior.fused_predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+    pass

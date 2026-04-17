@@ -51,27 +51,18 @@ class Kernel(Module, metaclass=abc.ABCMeta):
 
     @property
     def active_dims(self) -> NormalizedActiveDims:
-        return self._active_dims
+        pass
 
     @active_dims.setter
     def active_dims(self, value: ActiveDims) -> None:
-        self._active_dims = self._normalize_active_dims(value)
+        pass
 
     def on_separate_dims(self, other: "Kernel") -> bool:
         """
         Checks if the dimensions, over which the kernels are specified, overlap.
         Returns True if they are defined on different/separate dimensions and False otherwise.
         """
-        if isinstance(self.active_dims, slice) or isinstance(other.active_dims, slice):
-            # Be very conservative for kernels defined over slices of dimensions
-            return False
-
-        if self.active_dims is None or other.active_dims is None:
-            return False
-
-        this_dims = self.active_dims.reshape(-1, 1)
-        other_dims = other.active_dims.reshape(1, -1)
-        return not np.any(this_dims == other_dims)
+        pass
 
     @overload
     def slice(self, X: TensorType, X2: TensorType) -> Tuple[tf.Tensor, tf.Tensor]:
@@ -122,29 +113,7 @@ class Kernel(Module, metaclass=abc.ABCMeta):
         :param cov: Tensor of covariance matrices.
         :return: Sliced covariance matrices.
         """
-        cov = tf.convert_to_tensor(cov)
-        assert isinstance(cov, tf.Tensor)  # Hint for mypy.
-
-        if cov.shape.ndims == 2:
-            cov = tf.linalg.diag(cov)
-
-        dims = self.active_dims
-
-        if isinstance(dims, slice):
-            return cov[..., dims, dims]
-        elif dims is not None:
-            nlast = tf.shape(cov)[-1]
-            ndims = len(dims)
-
-            cov_shape = tf.shape(cov)
-            cov_reshaped = tf.reshape(cov, [-1, nlast, nlast])
-            gather1 = tf.gather(tf.transpose(cov_reshaped, [2, 1, 0]), dims)
-            gather2 = tf.gather(tf.transpose(gather1, [1, 0, 2]), dims)
-            cov = tf.reshape(
-                tf.transpose(gather2, [2, 0, 1]), tf.concat([cov_shape[:-2], [ndims, ndims]], 0)
-            )
-
-        return cov
+        pass
 
     @check_shapes(
         "ard_parameter: [any...]",
@@ -262,19 +231,7 @@ class Combination(Kernel):
 
         :return: Boolean indicator.
         """
-        if np.any([isinstance(k.active_dims, slice) for k in self.kernels]):
-            # Be conservative in the case of a slice object
-            return False
-        else:
-            dimlist = [k.active_dims for k in self.kernels]
-            overlapping = False
-            for i, dims_i in enumerate(dimlist):
-                assert isinstance(dims_i, np.ndarray)
-                for dims_j in dimlist[i + 1 :]:
-                    assert isinstance(dims_j, np.ndarray)
-                    if np.any(dims_i.reshape(-1, 1) == dims_j.reshape(1, -1)):
-                        overlapping = True
-            return not overlapping
+        pass
 
 
 class ReducingCombination(Combination):

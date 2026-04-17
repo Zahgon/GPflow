@@ -43,13 +43,7 @@ def _expectation_diagonal_product(
 
     :return: N
     """
-    if not kernel.on_separate_dimensions:
-        raise NotImplementedError(
-            "Product currently needs to be defined on separate dimensions."
-        )  # pragma: no cover
-
-    exps = [expectation(p, k, nghp=nghp) for k in kernel.kernels]
-    return reduce(tf.multiply, exps)
+    pass
 
 
 @dispatch.expectation.register(
@@ -76,13 +70,7 @@ def _expectation_diagonal_product_inducingpoints(
 
     :return: NxM
     """
-    if not kernel.on_separate_dimensions:
-        raise NotImplementedError(
-            "Product currently needs to be defined on separate dimensions."
-        )  # pragma: no cover
-
-    exps = [expectation(p, (k, inducing_variable), nghp=nghp) for k in kernel.kernels]
-    return reduce(tf.multiply, exps)
+    pass
 
 
 @dispatch.expectation.register(
@@ -113,23 +101,4 @@ def _expectation_diagonal_product_inducingpoints__product_inducingpoints(
 
     :return: NxMxM
     """
-    if feat1 != feat2:
-        raise NotImplementedError("Different inducing variables are not supported.")
-    if kern1 != kern2:
-        raise NotImplementedError(
-            "Calculating the expectation over two " "different Product kernels is not supported."
-        )
-
-    kernel = kern1
-    inducing_variable = feat1
-
-    if not kernel.on_separate_dimensions:
-        raise NotImplementedError(
-            "Product currently needs to be defined on separate dimensions."
-        )  # pragma: no cover
-
-    exps = [
-        expectation(p, (k, inducing_variable), (k, inducing_variable), nghp=nghp)
-        for k in kernel.kernels
-    ]
-    return reduce(tf.multiply, exps)
+    pass

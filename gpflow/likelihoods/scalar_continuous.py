@@ -116,24 +116,23 @@ class Gaussian(ScalarLikelihood):
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:  # pylint: disable=R0201
-        return tf.identity(F)
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        shape = tf.shape(F)
-        return tf.broadcast_to(self._variance(X), shape)
+        pass
 
     @inherit_check_shapes
     def _predict_mean_and_var(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType
     ) -> MeanAndVariance:
-        return tf.identity(Fmu), Fvar + self._variance(X)
+        pass
 
     @inherit_check_shapes
     def _predict_log_density(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType, Y: TensorType
     ) -> tf.Tensor:
-        return tf.reduce_sum(logdensities.gaussian(Y, Fmu, Fvar + self._variance(X)), axis=-1)
+        pass
 
     @inherit_check_shapes
     def _variational_expectations(
@@ -159,11 +158,11 @@ class Exponential(ScalarLikelihood):
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return self.invlink(F)
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return tf.square(self.invlink(F))
+        pass
 
     @inherit_check_shapes
     def _variational_expectations(
@@ -204,13 +203,11 @@ class StudentT(ScalarLikelihood):
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return F
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        shape = tf.shape(F)
-        var = (self._scale(X) ** 2) * (self.df / (self.df - 2.0))
-        return tf.broadcast_to(var, shape)
+        pass
 
 
 class Gamma(ScalarLikelihood):
@@ -243,12 +240,11 @@ class Gamma(ScalarLikelihood):
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return self._shape(X) * self.invlink(F)
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        scale = self.invlink(F)
-        return self._shape(X) * (scale ** 2)
+        pass
 
     @inherit_check_shapes
     def _variational_expectations(
@@ -313,11 +309,8 @@ class Beta(ScalarLikelihood):
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        return self.invlink(F)
+        pass
 
     @inherit_check_shapes
     def _conditional_variance(self, X: TensorType, F: TensorType) -> tf.Tensor:
-        mean = self.invlink(F)
-        var = (mean - tf.square(mean)) / (self._scale(X) + 1.0)
-        shape = tf.shape(F)
-        return tf.broadcast_to(var, shape)
+        pass

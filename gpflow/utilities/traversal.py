@@ -109,16 +109,10 @@ def print_summary(module: tf.Module, fmt: Optional[str] = None) -> None:
 
 def tabulate_module_summary(module: tf.Module, tablefmt: Optional[str] = None) -> str:
     def get_transform(path: Path, var: LeafComponent) -> Optional[str]:
-        if hasattr(var, "transform") and var.transform is not None:
-            if isinstance(var.transform, tfp.bijectors.Chain):
-                return " + ".join(b.__class__.__name__ for b in var.transform.bijectors[::-1])
-            return var.transform.__class__.__name__  # type: ignore[no-any-return]
-        return None
+        pass
 
     def get_prior(path: Path, var: LeafComponent) -> Optional[str]:
-        if hasattr(var, "prior") and var.prior is not None:
-            return var.prior.name  # type: ignore[no-any-return]
-        return None
+        pass
 
     # list of (column_name: str, column_getter: Callable[[tf.Variable], str]) tuples:
     column_definition = [
@@ -188,8 +182,7 @@ def _get_leaf_components(input_module: tf.Module) -> Mapping[Path, LeafVariable]
     def update_state(
         parameter_or_variable: LeafVariable, path: Path, state: Dict[Path, LeafVariable]
     ) -> Dict[Path, LeafVariable]:
-        state[path] = parameter_or_variable
-        return state
+        pass
 
     state = traverse_module(input_module, accumulator, update_state, target_types)
     return state
@@ -232,18 +225,7 @@ def reset_cache_bijectors(input_module: tf.Module) -> tf.Module:
     accumulator = ("", None)
 
     def clear_bijector(bijector: tfp.bijectors.Bijector, _: Path, state: None) -> None:
-        if not isinstance(bijector, tfp.bijectors.Bijector):
-            return  # skip submodules that are not bijectors
-
-        _clear_bijector_cache(bijector)
-
-        if isinstance(bijector, tfp.bijectors.Chain):
-            # recursively clear caches of sub-bijectors
-            for m in bijector.submodules:
-                if isinstance(m, tfp.bijectors.Bijector):
-                    _clear_bijector_cache(m)
-
-        return state
+        pass
 
     traverse_module(input_module, accumulator, clear_bijector, target_types)
     return input_module

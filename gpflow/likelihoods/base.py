@@ -97,7 +97,7 @@ class Likelihood(Module, abc.ABC):
         :param F: function evaluation tensor
         :returns: mean
         """
-        return self._conditional_mean(X, F)
+        pass
 
     @check_shapes(
         "X: [broadcast batch..., input_dim]",
@@ -121,7 +121,7 @@ class Likelihood(Module, abc.ABC):
         :param F: function evaluation tensor
         :returns: variance
         """
-        return self._conditional_variance(X, F)
+        pass
 
     @check_shapes(
         "X: [broadcast batch..., input_dim]",
@@ -165,7 +165,7 @@ class Likelihood(Module, abc.ABC):
         :param Fvar: variance of function evaluation tensor
         :returns: mean and variance
         """
-        return self._predict_mean_and_var(X, Fmu, Fvar)
+        pass
 
     @abc.abstractmethod
     @check_shapes(
@@ -211,7 +211,7 @@ class Likelihood(Module, abc.ABC):
         :param Y: observation tensor
         :returns: log predictive density
         """
-        return self._predict_log_density(X, Fmu, Fvar, Y)
+        pass
 
     @abc.abstractmethod
     @check_shapes(
@@ -304,8 +304,7 @@ class QuadratureLikelihood(Likelihood, abc.ABC):
         override it with 1 (broadcasting over observation/latent dimensions
         instead).
         """
-        assert self.latent_dim is not None
-        return self.latent_dim
+        pass
 
     @check_shapes(
         "F: [broadcast batch..., latent_dim]",
@@ -323,7 +322,7 @@ class QuadratureLikelihood(Likelihood, abc.ABC):
 
         Also see _quadrature_reduction.
         """
-        return tf.expand_dims(self.log_prob(X, F, Y), axis=-1)
+        pass
 
     @check_shapes(
         "quadrature_result: [batch..., d]",
@@ -354,9 +353,7 @@ class QuadratureLikelihood(Likelihood, abc.ABC):
         :param Y: observation tensor
         :returns: log predictive density
         """
-        return self._quadrature_reduction(
-            self.quadrature.logspace(self._quadrature_log_prob, Fmu, Fvar, X=X, Y=Y)
-        )
+        pass
 
     @inherit_check_shapes
     def _variational_expectations(
@@ -388,16 +385,7 @@ class QuadratureLikelihood(Likelihood, abc.ABC):
         :param Fvar: variance of function evaluation tensor
         :returns: mean and variance of Y
         """
-
-        def conditional_mean(F: TensorType, X_: TensorType) -> tf.Tensor:
-            return self.conditional_mean(X_, F)
-
-        def conditional_y_squared(F: TensorType, X_: TensorType) -> tf.Tensor:
-            return self.conditional_variance(X_, F) + tf.square(self.conditional_mean(X_, F))
-
-        E_y, E_y2 = self.quadrature([conditional_mean, conditional_y_squared], Fmu, Fvar, X_=X)
-        V_y = E_y2 - E_y ** 2
-        return E_y, V_y
+        pass
 
 
 class ScalarLikelihood(QuadratureLikelihood, abc.ABC):
@@ -453,7 +441,7 @@ class ScalarLikelihood(QuadratureLikelihood, abc.ABC):
         subclass to override it with 1 (broadcasting over observation/latent
         dimensions instead).
         """
-        return 1
+        pass
 
     @inherit_check_shapes
     def _quadrature_log_prob(self, F: TensorType, X: TensorType, Y: TensorType) -> tf.Tensor:
@@ -466,7 +454,7 @@ class ScalarLikelihood(QuadratureLikelihood, abc.ABC):
 
         Also see _quadrature_reduction.
         """
-        return self._scalar_log_prob(X, F, Y)
+        pass
 
     @inherit_check_shapes
     def _quadrature_reduction(self, quadrature_result: TensorType) -> tf.Tensor:
@@ -534,7 +522,7 @@ class SwitchedLikelihood(ScalarLikelihood):
     def _predict_log_density(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType, Y: TensorType
     ) -> tf.Tensor:
-        return self._partition_and_stitch([X, Fmu, Fvar, Y], "predict_log_density")
+        pass
 
     @inherit_check_shapes
     def _variational_expectations(
@@ -546,11 +534,7 @@ class SwitchedLikelihood(ScalarLikelihood):
     def _predict_mean_and_var(
         self, X: TensorType, Fmu: TensorType, Fvar: TensorType
     ) -> MeanAndVariance:
-        mvs = [lik.predict_mean_and_var(X, Fmu, Fvar) for lik in self.likelihoods]
-        mu_list, var_list = zip(*mvs)
-        mu = tf.concat(mu_list, axis=1)
-        var = tf.concat(var_list, axis=1)
-        return mu, var
+        pass
 
     @inherit_check_shapes
     def _conditional_mean(self, X: TensorType, F: TensorType) -> tf.Tensor:
@@ -608,22 +592,7 @@ class MonteCarloLikelihood(Likelihood):
 
         Here, we implement a default Monte Carlo routine.
         """
-
-        def conditional_mean(F: TensorType, X_: TensorType) -> TensorType:
-            return self.conditional_mean(X_, F)
-
-        def conditional_y_squared(F: TensorType, X_: TensorType) -> TensorType:
-            return self.conditional_variance(X_, F) + tf.square(self.conditional_mean(X_, F))
-
-        E_y, E_y2 = self._mc_quadrature(
-            [conditional_mean, conditional_y_squared],
-            Fmu,
-            Fvar,
-            epsilon=epsilon,
-            X_=X,
-        )
-        V_y = E_y2 - tf.square(E_y)
-        return E_y, V_y  # [N, D]
+        pass
 
     @inherit_check_shapes
     def _predict_log_density(
@@ -651,14 +620,7 @@ class MonteCarloLikelihood(Likelihood):
 
         Here, we implement a default Monte Carlo routine.
         """
-
-        def log_prob(F: TensorType, X_: TensorType, Y_: TensorType) -> tf.Tensor:
-            return self.log_prob(X_, F, Y_)
-
-        return tf.reduce_sum(
-            self._mc_quadrature(log_prob, Fmu, Fvar, logspace=True, epsilon=epsilon, X_=X, Y_=Y),
-            axis=-1,
-        )
+        pass
 
     @inherit_check_shapes
     def _variational_expectations(

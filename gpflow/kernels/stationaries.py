@@ -67,8 +67,7 @@ class Stationary(Kernel):
         """
         Whether ARD behaviour is active.
         """
-        ndims: int = self.lengthscales.shape.ndims
-        return ndims > 0
+        pass
 
     @check_shapes(
         "X: [broadcast any...]",

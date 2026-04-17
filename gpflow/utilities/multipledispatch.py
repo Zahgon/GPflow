@@ -56,12 +56,7 @@ class Dispatcher(GeneratorDispatcher):
         """
         Returns matching function for `types`; if not existing raises an error.
         """
-        f = self.dispatch(*types)
-        if f is None:
-            raise NotImplementedError(
-                f"Could not find signature for {self.name}: <{str_signature(types)}>"
-            )
-        return f
+        pass
 
     def get_first_occurrence(self, *types: Types) -> Optional[AnyCallable]:
         """

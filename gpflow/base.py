@@ -63,11 +63,11 @@ SamplesMeanAndVariance = Tuple[tf.Tensor, tf.Tensor, tf.Tensor]
 
 
 def _IS_PARAMETER(o: object) -> bool:
-    return isinstance(o, Parameter)
+    pass
 
 
 def _IS_TRAINABLE_PARAMETER(o: object) -> bool:
-    return isinstance(o, Parameter) and o.trainable
+    pass
 
 
 class Module(tf.Module):
@@ -84,30 +84,22 @@ class Module(tf.Module):
 
     @property
     def parameters(self) -> Tuple["Parameter", ...]:
-        return tuple(self._flatten(predicate=_IS_PARAMETER))
+        pass
 
     @property
     def trainable_parameters(self) -> Tuple["Parameter", ...]:
-        return tuple(self._flatten(predicate=_IS_TRAINABLE_PARAMETER))
+        pass
 
     def _representation_table(self, object_name: str, tablefmt: Optional[str]) -> str:
-        from .utilities import leaf_components, tabulate_module_summary
-
-        repr_components = [object_name]
-        if leaf_components(self):
-            repr_components.append(tabulate_module_summary(self, tablefmt=tablefmt))
-        return "\n".join(repr_components)
+        pass
 
     def _repr_html_(self) -> str:
         """ Nice representation of GPflow objects in IPython/Jupyter notebooks """
-        from html import escape
-
-        return self._representation_table(escape(repr(self)), "html")
+        pass
 
     def _repr_pretty_(self, p: "pretty.RepresentationPrinter", cycle: bool) -> None:
         """ Nice representation of GPflow objects in the IPython shell """
-        repr_str = self._representation_table(repr(self), default_summary_fmt())
-        p.text(repr_str)
+        pass
 
 
 class PriorOn(Enum):
@@ -224,19 +216,19 @@ class Parameter(tfp.util.TransformedVariable):
 
     @property
     def prior_on(self) -> PriorOn:
-        return self._prior_on
+        pass
 
     @prior_on.setter
     def prior_on(self, value: Union[str, PriorOn]) -> None:
-        self._prior_on = PriorOn(value)
+        pass
 
     @property
     def unconstrained_variable(self) -> tf.Variable:
-        return self._pretransformed_input
+        pass
 
     @property
     def transform(self) -> Optional[Transform]:
-        return self.bijector
+        pass
 
     @property
     def trainable(self) -> bool:
@@ -245,7 +237,7 @@ class Parameter(tfp.util.TransformedVariable):
 
         This attribute cannot be set directly. Use :func:`gpflow.set_trainable`.
         """
-        return self.unconstrained_variable.trainable  # type: ignore[no-any-return]
+        pass
 
     def assign(
         self,

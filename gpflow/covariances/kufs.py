@@ -31,7 +31,7 @@ from .dispatch import Kuf
 def Kuf_kernel_inducingpoints(
     inducing_variable: InducingPoints, kernel: Kernel, Xnew: TensorType
 ) -> tf.Tensor:
-    return kernel(inducing_variable.Z, Xnew)
+    pass
 
 
 @Kuf.register(Multiscale, SquaredExponential, TensorLike)
@@ -43,13 +43,7 @@ def Kuf_kernel_inducingpoints(
 def Kuf_sqexp_multiscale(
     inducing_variable: Multiscale, kernel: SquaredExponential, Xnew: TensorType
 ) -> tf.Tensor:
-    Xnew, _ = kernel.slice(Xnew, None)
-    Zmu, Zlen = kernel.slice(inducing_variable.Z, inducing_variable.scales)
-    idlengthscales = kernel.lengthscales + Zlen
-    d = inducing_variable._cust_square_dist(Xnew, Zmu, idlengthscales[None, :, :])
-    lengthscales = tf.reduce_prod(kernel.lengthscales / idlengthscales, 1)
-    lengthscales = tf.reshape(lengthscales, (1, -1))
-    return tf.transpose(kernel.variance * tf.exp(-0.5 * d) * lengthscales)
+    pass
 
 
 @Kuf.register(InducingPatches, Convolutional, object)
@@ -61,9 +55,4 @@ def Kuf_sqexp_multiscale(
 def Kuf_conv_patch(
     inducing_variable: InducingPatches, kernel: Convolutional, Xnew: TensorType
 ) -> tf.Tensor:
-    Xp = kernel.get_patches(Xnew)  # [N, num_patches, patch_len]
-    bigKzx = kernel.base_kernel.K(
-        inducing_variable.Z, Xp
-    )  # [M, N, P] -- thanks to broadcasting of kernels
-    Kzx = tf.reduce_sum(bigKzx * kernel.weights if hasattr(kernel, "weights") else bigKzx, [2])
-    return Kzx / kernel.num_patches
+    pass

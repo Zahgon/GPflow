@@ -40,10 +40,7 @@ from ..dispatch import Kuu
 def Kuu_generic(
     inducing_variable: InducingPoints, kernel: MultioutputKernel, *, jitter: float = 0.0
 ) -> tf.Tensor:
-    Kmm = kernel(inducing_variable.Z, full_cov=True, full_output_cov=True)
-    M = tf.shape(Kmm)[0] * tf.shape(Kmm)[1]
-    jittermat = jitter * tf.reshape(tf.eye(M, dtype=Kmm.dtype), tf.shape(Kmm))
-    return Kmm + jittermat
+    pass
 
 
 @Kuu.register(FallbackSharedIndependentInducingVariables, SharedIndependent)
@@ -57,9 +54,7 @@ def Kuu_shared_shared(
     *,
     jitter: float = 0.0,
 ) -> tf.Tensor:
-    Kmm = Kuu(inducing_variable.inducing_variable, kernel.kernel)
-    jittermat = tf.eye(inducing_variable.num_inducing, dtype=Kmm.dtype) * jitter
-    return Kmm + jittermat
+    pass
 
 
 @Kuu.register(FallbackSharedIndependentInducingVariables, (SeparateIndependent, IndependentLatent))
@@ -73,9 +68,7 @@ def Kuu_fallback_shared(
     *,
     jitter: float = 0.0,
 ) -> tf.Tensor:
-    Kmm = tf.stack([Kuu(inducing_variable.inducing_variable, k) for k in kernel.kernels], axis=0)
-    jittermat = tf.eye(inducing_variable.num_inducing, dtype=Kmm.dtype)[None, :, :] * jitter
-    return Kmm + jittermat
+    pass
 
 
 @Kuu.register(FallbackSeparateIndependentInducingVariables, SharedIndependent)
@@ -89,11 +82,7 @@ def Kuu_fallback_separate_shared(
     *,
     jitter: float = 0.0,
 ) -> tf.Tensor:
-    Kmm = tf.stack(
-        [Kuu(f, kernel.kernel) for f in inducing_variable.inducing_variable_list], axis=0
-    )
-    jittermat = tf.eye(inducing_variable.num_inducing, dtype=Kmm.dtype)[None, :, :] * jitter
-    return Kmm + jittermat
+    pass
 
 
 @Kuu.register(
@@ -109,13 +98,4 @@ def Kuu_fallbace_separate(
     *,
     jitter: float = 0.0,
 ) -> tf.Tensor:
-    n_iv = len(inducing_variable.inducing_variable_list)
-    n_k = len(kernel.kernels)
-    assert (
-        n_iv == n_k
-    ), f"Must have same number of inducing variables and kernels. Found {n_iv} and {n_k}."
-
-    Kmms = [Kuu(f, k) for f, k in zip(inducing_variable.inducing_variable_list, kernel.kernels)]
-    Kmm = tf.stack(Kmms, axis=0)
-    jittermat = tf.eye(inducing_variable.num_inducing, dtype=Kmm.dtype)[None, :, :] * jitter
-    return Kmm + jittermat
+    pass

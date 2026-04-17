@@ -97,16 +97,7 @@ def shared_independent_conditional(
         Please see `gpflow.conditional._expand_independent_outputs` for more information
         about the shape of the variance, depending on `full_cov` and `full_output_cov`.
     """
-    posterior = IndependentPosteriorMultiOutput(
-        kernel,
-        inducing_variable,
-        f,
-        q_sqrt,
-        whiten=white,
-        mean_function=None,
-        precompute_cache=None,
-    )
-    return posterior.fused_predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+    pass
 
 
 @conditional._gpflow_internal_register(
@@ -140,16 +131,7 @@ def separate_independent_conditional(
     q_sqrt: Optional[tf.Tensor] = None,
     white: bool = False,
 ) -> MeanAndVariance:
-    posterior = IndependentPosteriorMultiOutput(
-        kernel,
-        inducing_variable,
-        f,
-        q_sqrt,
-        whiten=white,
-        mean_function=None,
-        precompute_cache=None,
-    )
-    return posterior.fused_predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+    pass
 
 
 @conditional._gpflow_internal_register(
@@ -194,16 +176,7 @@ def fallback_independent_latent_conditional(
     - See the multioutput notebook for more information about the multioutput framework.
     - See above for the parameters and the return value.
     """
-    posterior = FallbackIndependentLatentPosterior(
-        kernel,
-        inducing_variable,
-        f,
-        q_sqrt,
-        whiten=white,
-        mean_function=None,
-        precompute_cache=None,
-    )
-    return posterior.fused_predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+    pass
 
 
 @conditional._gpflow_internal_register(object, InducingPoints, MultioutputKernel, object)
@@ -246,16 +219,7 @@ def inducing_point_conditional(
     :param f: variational mean, [L, 1]
     :param q_sqrt: standard-deviations or cholesky, [L, 1]  or  [1, L, L]
     """
-    posterior = FullyCorrelatedPosterior(
-        kernel,
-        inducing_variable,
-        f,
-        q_sqrt,
-        whiten=white,
-        mean_function=None,
-        precompute_cache=None,
-    )
-    return posterior.fused_predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+    pass
 
 
 @conditional._gpflow_internal_register(
@@ -299,13 +263,4 @@ def coregionalization_conditional(
       conditional in the single-output case.
     - See the multioutput notebook for more information about the multioutput framework.
     """
-    posterior = LinearCoregionalizationPosterior(
-        kernel,
-        inducing_variable,
-        f,
-        q_sqrt,
-        whiten=white,
-        mean_function=None,
-        precompute_cache=None,
-    )
-    return posterior.fused_predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+    pass

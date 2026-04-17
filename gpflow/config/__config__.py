@@ -106,70 +106,41 @@ class _Values:
 
 def _default(value: _Value) -> Any:
     """Checks if value is set in the environment."""
-    return os.getenv(value.name, default=value.value)
+    pass
 
 
 def _default_numeric_type_factory(
     valid_types: Mapping[str, type], enum_key: _Value, type_name: str
 ) -> type:
-    value: Union[str, type] = _default(enum_key)
-    if isinstance(value, type) and (value in valid_types.values()):
-        return value
-    assert isinstance(value, str)  # Hint for mypy
-    if value not in valid_types:
-        raise TypeError(f"Config cannot recognize {type_name} type.")
-    return valid_types[value]
+    pass
 
 
 def _default_int_factory() -> type:
-    valid_types = dict(int16=np.int16, int32=np.int32, int64=np.int64)
-    return _default_numeric_type_factory(valid_types, _Values.INT, "int")
+    pass
 
 
 def _default_float_factory() -> type:
-    valid_types = dict(float16=np.float16, float32=np.float32, float64=np.float64)
-    return _default_numeric_type_factory(valid_types, _Values.FLOAT, "float")
+    pass
 
 
 def _default_jitter_factory() -> float:
-    value = _default(_Values.JITTER)
-    try:
-        return float(value)
-    except ValueError:
-        raise TypeError("Config cannot set the jitter value with non float type.")
+    pass
 
 
 def _default_positive_bijector_factory() -> str:
-    bijector_type: str = _default(_Values.POSITIVE_BIJECTOR)
-    if bijector_type not in positive_bijector_type_map().keys():
-        raise TypeError(
-            "Config cannot set the passed value as a default positive bijector."
-            f"Available options: {set(positive_bijector_type_map().keys())}"
-        )
-    return bijector_type
+    pass
 
 
 def _default_positive_minimum_factory() -> float:
-    value = _default(_Values.POSITIVE_MINIMUM)
-    try:
-        return float(value)
-    except ValueError:
-        raise TypeError("Config cannot set the positive_minimum value with non float type.")
+    pass
 
 
 def _default_likelihood_positive_minimum_factory() -> float:
-    value = _default(_Values.LIKELIHOOD_POSITIVE_MINIMUM)
-    try:
-        return float(value)
-    except ValueError:
-        raise TypeError(
-            "Config cannot set the likelihood_positive_minimum value with non float type."
-        )
+    pass
 
 
 def _default_summary_fmt_factory() -> Optional[str]:
-    result: Optional[str] = _default(_Values.SUMMARY_FMT)
-    return result
+    pass
 
 
 # The following type alias is for the Config class, to help a static analyser distinguish

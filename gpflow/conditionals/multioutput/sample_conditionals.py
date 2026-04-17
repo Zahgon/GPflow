@@ -60,18 +60,4 @@ def _sample_conditional(
 
     :return: samples, mean, cov
     """
-    if full_cov:
-        raise NotImplementedError("full_cov not yet implemented")
-    if full_output_cov:
-        raise NotImplementedError("full_output_cov not yet implemented")
-
-    ind_conditional = conditional.dispatch_or_raise(
-        object, SeparateIndependentInducingVariables, SeparateIndependent, object
-    )
-    g_mu, g_var = ind_conditional(
-        Xnew, inducing_variable, kernel, f, white=white, q_sqrt=q_sqrt
-    )  # [..., N, L], [..., N, L]
-    g_sample = sample_mvn(g_mu, g_var, full_cov, num_samples=num_samples)  # [..., (S), N, L]
-    f_mu, f_var = mix_latent_gp(kernel.W, g_mu, g_var, full_cov, full_output_cov)
-    f_sample = tf.tensordot(g_sample, kernel.W, [[-1], [-1]])  # [..., N, P]
-    return f_sample, f_mu, f_var
+    pass
